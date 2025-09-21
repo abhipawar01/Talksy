@@ -7,6 +7,7 @@ import Community from './pages/Community'
 import { AppContextProvider } from './context/AppContext'
 import { useState } from 'react'
 import {assets} from './assets/assets'
+import './assets/prism.css'
 
 const App = () => {
 
