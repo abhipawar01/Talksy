@@ -48,7 +48,7 @@ const ChatBox = () => {
       {/*chat Messages*/}
       <div ref={containerRef} className='flex-1 mb-5 overflow-y-scroll'>
         {messages.length === 0 && (
-          <div className='h-full flex flex-col items-center justify-center gap-2 text-primary'>
+          <div className='h-full flex flex-col items-center justify-center gap-2 text-primary '>
             <img src={theme === 'dark' ? assets.logo_full : assets.logo_full_dark}
               alt="" className='w-full max-w-56 sm:max-w-68' />
               <p  className='mt-5 text-4xl sm:text-6xl text-center text-gray-400
@@ -88,7 +88,7 @@ const ChatBox = () => {
           <option value="image">Image</option>
         </select>
         <input  onChange={(e) => setPrompt(e.target.value)} value={prompt} type="text" placeholder="Type your message here..." className='flex-1 w-full 
-        text-sm outline-none' required />
+        text-sm outline-none ' required />
         <button disabled = {loading}>
           <img src={loading ? assets.stop_icon : assets.send_icon } alt="" className='w-8
           cursor-pointer' />
