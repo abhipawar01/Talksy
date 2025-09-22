@@ -1,5 +1,5 @@
 import e from 'express';    
-import User from '../models/userModel.js';
+import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
@@ -12,7 +12,7 @@ const generateToken = (id) => {
 
 //API to register a user
 
-export const registreUser = async (req, res) => {
+export const registerUser = async (req, res) => {
     const {name, email, password} = req.body;
 
     try {
@@ -34,11 +34,11 @@ export const loginUser = async (req, res) => {
     const {email, password} = req.body;
     try {
         const userExists = await User.findOne({email});
-        if(user){
-            const isMatch = await bcrypt.compare(password, user.password);
+        if(userExists){
+            const isMatch = await bcrypt.compare(password, userExists.password);
 
             if(isMatch){
-                const token = generateToken(user._id);
+                const token = generateToken(userExists._id);
                 return res.json({success:true , token});
             }
         }
