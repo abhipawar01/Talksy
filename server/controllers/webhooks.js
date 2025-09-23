@@ -1,8 +1,7 @@
-import { response } from "express";
+
 import Stripe from "stripe";
 import Transaction from "../models/Transaction.js";
 import User from './../models/User.js';
-import Credits from './../../client/src/pages/Credits';
 
 export const stripeWebhooks = async (request, response) =>{
     const stripe = new Stripe(process.env.STRIPE_WEBHOOK_SECRET_KEY)
@@ -22,7 +21,7 @@ export const stripeWebhooks = async (request, response) =>{
             case "payment_intent.succeeded":{
                 const paymentIntent = event.data.object;
                 const sessionList = await stripe.checkout.sessions.list({
-                    payment_intent: paymentIntent.id;
+                    payment_intent: paymentIntent.id
                 })
 
                 const session = sessionList.data[0];
