@@ -1,5 +1,4 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './configs/db.js';
 import 'dotenv/config';
@@ -9,28 +8,27 @@ import messageRouter from './routes/messageRoutes.js';
 import creditRouter from './routes/creditRoutes.js';
 import { stripeWebhooks } from './controllers/webhooks.js';
 
-
 const app = express();
 
 await connectDB();
-
-//stripe webhooks 
-app.post('/api/stripe', express.raw({type: 'application/json'}),
-stripeWebhooks)
-
-//middleware
 app.use(cors());
+
+// Stripe webhook BEFORE express.json()
+app.post('/api/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
+
+// middleware
+
 app.use(express.json());
 
-//Routes
-app.get('/', (req,res)=> res.send('Server is running...'));
-app.use('/api/user',userRouter);
-app.use('/api/chat',chatRouter);
+// Routes
+app.get('/', (req, res) => res.send('Server is running...'));
+app.use('/api/user', userRouter);
+app.use('/api/chat', chatRouter);
 app.use('/api/message', messageRouter);
-app.use('/api/credit', creditRouter)
+app.use('/api/credit', creditRouter);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, ()=> {
-    console.log(`Server running on port ${PORT}`);
-})
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
