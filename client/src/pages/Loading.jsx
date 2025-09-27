@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { useAppContext } from '../context/appContext';
+import { useAppContext } from '../context/AppContext';
 
 const Loading = () => {
 
