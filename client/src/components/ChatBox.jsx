@@ -6,13 +6,14 @@ import { assets } from '../assets/assets';
 import Message from './Message'; 
 import { set } from 'moment/src/lib/moment/get-set';
 import { useRef } from 'react';
+import toast from "react-hot-toast";
 
 const ChatBox = () => {
 
   const containerRef = useRef(null);
 
-  const {selectedChat, theme} = useAppContext();
-
+  const {selectedChat, theme, user, axios, token, setUser} = useAppContext();
+  
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -21,9 +22,53 @@ const ChatBox = () => {
   const [mode, setMode] = useState("text");
   const [isPublished, setIsPublished] = useState(false);
 
-  const onSubmit = async (e) => {
+const onSubmit = async (e) => {
+  try {
     e.preventDefault();
+
+    if (!user) {
+      return toast.error('Login to send message');
+    }
+
+    if (!selectedChat) {
+      return toast.error('Please create or select a chat first');
+    }
+
+    setLoading(true);
+    const promptCopy = prompt;
+    setPrompt('');
+
+    setMessages(prev => [
+      ...prev,
+      { role: 'user', content: prompt, timestamp: Date.now(), isImage: false }
+    ]);
+
+    const { data } = await axios.post(
+      `/api/message/${mode}`,
+      { chatId: selectedChat._id, prompt, isPublished },
+      { headers: { Authorization: token } }
+    );
+
+    if (data.success) {
+      setMessages(prev => [...prev, data.reply]);
+
+      // decrease credits
+      setUser(prev => ({
+        ...prev,
+        credits: prev.credits - (mode === 'image' ? 2 : 1)
+      }));
+    } else {
+      toast.error(data.message);
+      setPrompt(promptCopy);
+    }
+  } catch (error) {
+    toast.error(error.message);
+  } finally {
+    setPrompt('');
+    setLoading(false);
   }
+};
+
 
   useEffect(() => {
     if(selectedChat){

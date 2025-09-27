@@ -68,9 +68,7 @@ import imagekit from '../configs/imagekit.js';
         const encodedPrompt = encodeURIComponent(prompt);
 
         //Construct Imagekit AI generation URL
-        const generatedImageUrl = `${process.env.IMAGEKIT_URL_ENDPOINT}/
-        ik-genimg-prompt-${encodedPrompt}/talksy/${Date.now()}.png?tr=w-800,
-        h-800`;
+        const generatedImageUrl = `${process.env.IMAGEKIT_URL_ENDPOINT}/ik-genimg-prompt-${encodedPrompt}/talksy/${Date.now()}.png?tr=w-800,h-800`;
 
         //Trigger generation by fetching from imagekit
         const aiImageResponse = await axios.get(generatedImageUrl, {responseType:'arraybuffer'})
@@ -90,12 +88,12 @@ import imagekit from '../configs/imagekit.js';
             content: uploadResponse.url,
             timestamp: Date.now(),
             isImage:true, 
-            isPublished
+            isPublished: Boolean(isPublished)
         }
 
         res.json({success:true, reply})
 
-        chat,messages.push(reply)
+        chat.messages.push(reply)
         await chat.save();
 
         await User.updateOne({_id:userId}, {$inc:{credits:-2}})

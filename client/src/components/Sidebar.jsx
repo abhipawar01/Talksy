@@ -24,7 +24,7 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
           if(!confirm){
             return
           }
-          const {data} = await axios.post('/api/chat/delete', {chatId}, {
+          const {data} = await axios.post(`/api/chat/deletechat/${chatId}`, {chatId}, {
             headers: {Authorization: token}
           })
           if(data.success){

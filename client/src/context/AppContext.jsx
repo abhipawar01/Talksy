@@ -53,29 +53,26 @@ export const AppContextProvider = ({ children }) => {
   };
 
   // ================== FETCH USER'S CHATS ==================
-  const fetchUsersChats = async () => {
-    try {
-      const { data } = await axios.get("/api/chat/getchats", {
-        headers: { Authorization: token },
-      });
+const fetchUsersChats = async () => {
+  try {
+    const { data } = await axios.get("/api/chat/getchats", {
+      headers: { Authorization: token },
+    });
 
-      if (data.success) {
-        setChats(data.chats);
+    if (data.success) {
+      setChats(data.chats);
 
-        // If no chats → create one and re-fetch
-        if (data.chats.length === 0) {
-          await createNewChat();
-          return fetchUsersChats();
-        } else {
-          setSelectedChat(data.chats[0]);
-        }
-      } else {
-        toast.error(data.message);
+      // ✅ Only set first chat if exists
+      if (data.chats.length > 0) {
+        setSelectedChat(data.chats[0]);
       }
-    } catch (error) {
-      toast.error(error.response?.data?.message || error.message);
+    } else {
+      toast.error(data.message);
     }
-  };
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
+  }
+};
 
   // ================== EFFECTS ==================
   useEffect(() => {
